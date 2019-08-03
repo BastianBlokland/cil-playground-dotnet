@@ -1,12 +1,3 @@
-.assembly extern System.Console { }
-.assembly extern mscorlib { }
-
-.module App.exe
-.assembly App
-{
-    .ver 1:0:0:0
-}
-
 .class public sealed RandomGenerator
     extends [mscorlib]System.Object
 {
@@ -60,7 +51,7 @@
         .get instance int32 RandomGenerator::GetMaxValue()
     }
 
-    .method public instance int32 Get()
+    .method public instance int32 GetNumber()
         cil managed
     {
         ldarg.0
@@ -89,38 +80,6 @@
     {
         ldarg.0
         ldfld int32 RandomGenerator::maxVal
-        ret
-    }
-}
-
-.class public sealed Program
-    extends [mscorlib]System.Object
-{
-    .method public static int32 Main()
-        cil managed
-    {
-        .entrypoint
-        .locals
-        (
-            [0] class RandomGenerator rg,
-            [1] int32 randomVal
-        )
-
-        ldc.i4 10
-        ldc.i4 25
-        newobj instance void RandomGenerator::.ctor(int32, int32)
-        stloc rg
-
-        ldloc rg
-        call instance int32 RandomGenerator::Get()
-        stloc randomVal
-
-        ldloca randomVal
-        call instance string [mscorlib]System.Int32::ToString()
-
-        call void [System.Console]System.Console::WriteLine(string)
-
-        ldc.i4 0
         ret
     }
 }
