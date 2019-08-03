@@ -7,14 +7,17 @@
 
     .method public specialname rtspecialname instance void .ctor()
     {
+        // Set minVal to 0.
         ldarg.0
         ldc.i4 0
         stfld int32 RandomGenerator::minVal
 
+        // Set maxVal to 100.
         ldarg.0
         ldc.i4 100
         stfld int32 RandomGenerator::maxVal
 
+        // Create new Random instance.
         ldarg.0
         newobj instance void [mscorlib]System.Random::.ctor()
         stfld class [mscorlib]System.Random RandomGenerator::rng
@@ -24,14 +27,17 @@
 
     .method public specialname rtspecialname instance void .ctor(int32 minVal, int32 maxVal)
     {
+        // Set minVal.
         ldarg.0
         ldarg minVal
         stfld int32 RandomGenerator::minVal
 
+        // Set maxVal.
         ldarg.0
         ldarg maxVal
         stfld int32 RandomGenerator::maxVal
 
+        // Create new Random instance.
         ldarg.0
         newobj instance void [mscorlib]System.Random::.ctor()
         stfld class [mscorlib]System.Random RandomGenerator::rng
