@@ -74,8 +74,7 @@
     {
         .locals
         (
-            [0] int32[] result,
-            [1] int32 index
+            [0] int32[] result
         )
 
         // If count is less then 0 then throw arg exception.
@@ -88,18 +87,51 @@
         newarr int32
         stloc result
 
+        // Fill array with random numbers.
+        ldarg.0
+        ldloc result
+        call instance void RandomGenerator::GetNumbers(int32[])
+
+        // Return array.
+        ldloc result
+        ret
+
+        _ThrowCountLessThen0:
+        ldstr "Count less then 0 is not supported"
+        ldstr "count"
+        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
+        throw
+    }
+
+    .method public instance void GetNumbers(int32[] numbersArray)
+    {
+        .locals
+        (
+            [0] int32 index,
+            [1] int32 count
+        )
+
+        // Check if numbers is null.
+        ldarg numbersArray
+        brnull _ThrowArrayNull
+
         // Initialize the index.
         ldc.i4 0
         stloc index
 
+        // Initialize the count.
+        ldarg numbersArray
+        ldlen
+        stloc count
+
         // Return if index is equal to count.
         _CheckIndex:
         ldloc index
-        ldarg count
+        ldloc count
         beq _Return
 
         // Generate a value and store it in the array.
-        ldloc result
+        ldarg numbersArray
         ldloc index
         ldarg.0
         call instance int32 RandomGenerator::GetNumber()
@@ -115,13 +147,11 @@
         br _CheckIndex
 
         _Return:
-        ldloc result
         ret
 
-        _ThrowCountLessThen0:
-        ldstr "Count less then 0 is not supported"
-        ldstr "count"
-        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
+        _ThrowArrayNull:
+        ldstr "array"
+        newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
         throw
     }
 
