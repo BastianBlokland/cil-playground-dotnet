@@ -6,7 +6,6 @@
     .field private initonly class [mscorlib]System.Random rng
 
     .method public specialname rtspecialname instance void .ctor()
-        cil managed
     {
         ldarg.0
         ldc.i4 0
@@ -24,7 +23,6 @@
     }
 
     .method public specialname rtspecialname instance void .ctor(int32 minVal, int32 maxVal)
-        cil managed
     {
         ldarg.0
         ldarg minVal
@@ -52,7 +50,6 @@
     }
 
     .method public instance int32 GetNumber()
-        cil managed
     {
         ldarg.0
         ldfld class [mscorlib]System.Random RandomGenerator::rng
@@ -67,8 +64,62 @@
         ret
     }
 
+    .method public instance int32[] GetNumbers(int32 count)
+    {
+        .locals
+        (
+            [0] int32[] result,
+            [1] int32 index
+        )
+
+        // If count is less then 0 then throw arg exception.
+        ldarg count
+        ldc.i4 0
+        blt _ThrowCountLessThen0
+
+        // Create the array.
+        ldarg count
+        newarr int32
+        stloc result
+
+        // Initialize the index.
+        ldc.i4 0
+        stloc index
+
+        // Return if index is equal to count.
+        _CheckIndex:
+        ldloc index
+        ldarg count
+        beq _Return
+
+        // Generate a value and store it in the array.
+        ldloc result
+        ldloc index
+        ldarg.0
+        call instance int32 RandomGenerator::GetNumber()
+        stelem int32
+
+        // Increment the index.
+        ldloc index
+        ldc.i4 1
+        add
+        stloc index
+
+        // Check the index for the next iteration.
+        br _CheckIndex
+
+        _Return:
+        ldloc result
+        ret
+
+        _ThrowCountLessThen0:
+        ldstr "Count less then 0 is not supported"
+        ldstr "count"
+        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
+        throw
+    }
+
     .method private instance int32 GetMinValue()
-        cil managed
     {
         ldarg.0
         ldfld int32 RandomGenerator::minVal
@@ -76,7 +127,6 @@
     }
 
     .method private instance int32 GetMaxValue()
-        cil managed
     {
         ldarg.0
         ldfld int32 RandomGenerator::maxVal

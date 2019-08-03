@@ -2,86 +2,63 @@
     extends [mscorlib]System.Object
 {
     .method public static int32 Main(class [mscorlib]System.String[] args)
-        cil managed
     {
         .entrypoint
         .locals
         (
-            [0] class RandomGenerator rg,
-            [1] int32 numbersRemaining
+            [0] int32 minValue,
+            [1] int32 maxValue,
+            [2] int32 count,
+            [3] class RandomGenerator generator,
+            [4] int32[] randomNumbers
         )
+
+        // Parse minValue from arg 0.
+        ldarg args
+        ldc.i4 0 // Argument 0.
+        ldloca minValue
+        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        brfalse _ExitWithInvalidArgs
+
+        // Parse maxValue from arg 1.
+        ldarg args
+        ldc.i4 1 // Argument 1.
+        ldloca maxValue
+        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        brfalse _ExitWithInvalidArgs
+
+        // Parse count from arg 2.
+        ldarg args
+        ldc.i4 2 // Argument 2.
+        ldloca count
+        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        brfalse _ExitWithInvalidArgs
 
         // Create generator.
-        ldc.i4 0 // Min value.
-        ldc.i4 100 // Max value.
+        ldloc minValue
+        ldloc maxValue
         newobj instance void RandomGenerator::.ctor(int32, int32)
-        stloc rg
+        stloc generator
 
-        // Find how many numbers to generate.
-        ldarg args
-        call int32 Program::GetAmountOfNumbersToGenerate(class [mscorlib]System.String[])
-        stloc numbersRemaining
+        // Generate the numbers.
+        ldloc generator
+        ldloc count
+        call instance int32[] RandomGenerator::GetNumbers(int32)
+        stloc randomNumbers
 
-        _GenerateNumber:
-        ldloc rg
-        call instance int32 RandomGenerator::GetNumber()
-        call void Program::PrintNumber(int32)
-
-        // Substract 1 from 'numbersRemaining'.
-        ldloc numbersRemaining
-        ldc.i4 1
-        sub
-        stloc numbersRemaining
-
-        // If 'numbersRemaining' is above 0 then generate another number.
-        ldloc numbersRemaining
-        ldc.i4 0
-        bgt _GenerateNumber
+        // Print the numbers.
+        ldloc randomNumbers
+        call void PrintNumbers(int32[])
 
         // Exit with code '0'.
+        _Exit:
         ldc.i4 0
         ret
-    }
 
-    .method private static int32 GetAmountOfNumbersToGenerate(class [mscorlib]System.String[] args)
-        cil managed
-    {
-        .locals
-        (
-            [0] int32 result
-        )
-
-        // If args array is empty then return 0.
-        ldarg args
-        ldlen
-        ldc.i4 0
-        beq _Return0
-
-        // Parse the first argument as a int.
-        ldarg args
-        ldc.i4 0
-        ldelem class [mscorlib]System.String
-        ldloca result
-        call bool [mscorlib]System.Int32::TryParse(string, int32&)
-
-        // Ignore the result of the TryParse, if fails we just return 0.
-        pop
-
-        // Return result.
-        ldloc result
-        ret
-
-        _Return0:
-        ldc.i4 0
-        ret
-    }
-
-    .method private static void PrintNumber(int32 number)
-    {
-        ldarga number
-        call instance string [mscorlib]System.Int32::ToString()
+        _ExitWithInvalidArgs:
+        ldstr "Invalid arguments, expected: arg1: minValue, arg2: maxValue, arg3: count"
         call void [System.Console]System.Console::WriteLine(string)
-
+        ldc.i4 1
         ret
     }
 }
