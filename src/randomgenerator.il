@@ -27,6 +27,11 @@
 
     .method public specialname rtspecialname instance void .ctor(int32 minVal, int32 maxVal)
     {
+        // Verify that max is not less then min.
+        ldarg maxVal
+        ldarg minVal
+        blt _ThrowMaxValueLessThenMinValue
+
         // Set minVal.
         ldarg.0
         ldarg minVal
@@ -43,6 +48,12 @@
         stfld class [mscorlib]System.Random RandomGenerator::rng
 
         ret
+
+        _ThrowMaxValueLessThenMinValue:
+        ldstr "maxValue cannot be less then minValue."
+        ldstr "maxValue"
+        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
+        throw
     }
 
     .property instance int32 MinValue()
@@ -97,7 +108,7 @@
         ret
 
         _ThrowCountLessThen0:
-        ldstr "Count less then 0 is not supported"
+        ldstr "Count less then 0 is not supported."
         ldstr "count"
         newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
         throw

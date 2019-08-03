@@ -56,7 +56,7 @@
         ret
 
         _ExitWithInvalidArgs:
-        ldstr "Invalid arguments, expected: arg1: minValue, arg2: maxValue, arg3: count"
+        ldstr "Invalid arguments, expected: arg1: minValue, arg2: maxValue, arg3: count."
         call void [System.Console]System.Console::WriteLine(string)
         ldc.i4 1
         ret
