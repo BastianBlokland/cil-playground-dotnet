@@ -1,0 +1,28 @@
+{
+    "search.useIgnoreFiles": false,
+    "search.exclude": {
+        "**/.git": true,
+        "**/.git*": true,
+        "**/bin": true,
+        "**/obj": true,
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/bin": true,
+        "**/obj": true,
+    },
+    "files.insertFinalNewline": true,
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": false,
+    "files.trimTrailingWhitespace": true,
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.rulers": [
+        100
+    ],
+    "terminal.integrated.cwd": "",
+    "workbench.colorCustomizations": {}
+}
