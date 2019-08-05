@@ -8,7 +8,8 @@
         (
             [0] int32 mode,
             [1] class [mscorlib]System.IO.StreamWriter outputWriter,
-            [2] int32 exitCode
+            [2] int32 exitCode,
+            [3] class [mscorlib]System.Exception exception
         )
 
         // Parse mode from arg 0.
@@ -35,11 +36,33 @@
         br _Run
 
         _Run:
-        // Generate the numbers.
-        ldarg args
-        ldloc outputWriter
-        call int32 Program::GenerateNumbers(class [mscorlib]System.String[], class [mscorlib]System.IO.StreamWriter)
-        stloc exitCode
+        .try
+        {
+            // Generate the numbers.
+            ldarg args
+            ldloc outputWriter
+            call int32 Program::GenerateNumbers(class [mscorlib]System.String[], class [mscorlib]System.IO.StreamWriter)
+            stloc exitCode
+
+            // Leave the try block.
+            leave _FinishedRun
+        }
+        catch [mscorlib]System.Exception
+        {
+            stloc exception
+
+            // Print exception to console.
+            ldstr "Failed to generate: "
+            ldloc exception
+            callvirt instance string [mscorlib]System.Exception::get_Message()
+            call string [mscorlib]System.String::Concat(string, string)
+            call void [System.Console]System.Console::WriteLine(string)
+
+            // Leave the catch block.
+            leave _FinishedRun
+        }
+
+        _FinishedRun:
 
         // Dispose the output writer.
         ldloc outputWriter
