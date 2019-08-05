@@ -3,6 +3,10 @@
     int32 index,
     int32& result)
 {
+    // Check if array is null.
+    ldarg stringArray
+    brnull _ThrowArrayNull
+
     // If array has too little entries then return false.
     ldarg stringArray
     ldlen
@@ -24,9 +28,14 @@
     starg result
     ldc.i4 0
     ret
+
+    _ThrowArrayNull:
+    ldstr "stringArray"
+    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    throw
 }
 
-.method static void ForAll<T>(!!T[] tArray, class [mscorlib]System.Action`1<!!T> action)
+.method static void ForAll<T>(!!T[] tArray, class [mscorlib]System.Action<!!T> action)
 {
     .locals
     (
@@ -62,7 +71,7 @@
     ldarg tArray
     ldloc index
     ldelem !!0
-    callvirt instance void class [mscorlib]System.Action`1<!!0>::Invoke(!0)
+    callvirt instance void class [mscorlib]System.Action<!!0>::Invoke(!0)
 
     // Increment the index.
     ldloc index
@@ -87,27 +96,88 @@
     ret
 }
 
-.method static void PrintNumbers(int32[] numberArray)
+.method static void PrintAll<T>(!!T[] tArray, class [mscorlib]System.IO.StreamWriter writer)
 {
-    // Load array.
-    ldarg numberArray
+    .locals
+    (
+        [0] int32 index,
+        [1] int32 count
+    )
 
-    // Create delegate for 'PrintNumber'.
-    ldnull // Null because it is a static method.
-    ldftn void PrintNumber(int32)
-    newobj instance void class [mscorlib]System.Action`1<int32>::.ctor(object, native int)
+    // Check if array is null.
+    ldarg tArray
+    brnull _ThrowArrayNull
 
-    // Invoke the delegate for all the items in the array.
-    call void ForAll<int32>(!!0[], class [mscorlib]System.Action`1<!!0>)
+    // Check if writer is null.
+    ldarg writer
+    brnull _ThrowWriterNull
 
+    // Set index to 0.
+    ldc.i4 0
+    stloc index
+
+    // Set count to length of the array.
+    ldarg tArray
+    ldlen
+    stloc count
+
+    // Return if index is equal to count.
+    _CheckIndex:
+    ldloc index
+    ldloc count
+    beq _Return
+
+    // Print the item.
+    ldarg tArray
+    ldloc index
+    ldelem !!0
+    ldarg writer
+    call void PrintValue<!!0>(!!0, class [mscorlib]System.IO.StreamWriter)
+
+    // Increment the index.
+    ldloc index
+    ldc.i4 1
+    add
+    stloc index
+
+    // Check the index for the next iteration.
+    br _CheckIndex
+
+    _ThrowArrayNull:
+    ldstr "tArray"
+    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    throw
+
+    _ThrowWriterNull:
+    ldstr "writer"
+    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    throw
+
+    _Return:
     ret
 }
 
-.method static void PrintNumber(int32 number)
+.method static void PrintValue<T>(!!T val, class [mscorlib]System.IO.StreamWriter writer)
 {
-    ldarga number
-    call instance string [mscorlib]System.Int32::ToString()
-    call void [System.Console]System.Console::WriteLine(string)
+    // Check if writer is null.
+    ldarg writer
+    brnull _ThrowWriterNull
+
+    // Load the writer.
+    ldarg writer
+
+    // Create a string out of the value.
+    ldarg val
+    box int32
+    callvirt instance string [mscorlib]System.Object::ToString()
+
+    // Print the string to the writer.
+    call instance void [mscorlib]System.IO.StreamWriter::WriteLine(string)
 
     ret
+
+    _ThrowWriterNull:
+    ldstr "writer"
+    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    throw
 }

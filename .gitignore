@@ -5,3 +5,6 @@
 # Temporary dirs.
 /src/[Oo]bj/
 /src/[Bb]in/
+
+# Temporary output file.
+/output.txt
