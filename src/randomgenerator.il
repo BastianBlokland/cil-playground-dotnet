@@ -1,21 +1,15 @@
-.class public sealed RandomGenerator
+.class sealed RandomGenerator
     extends [mscorlib]System.Object
 {
-    .field private initonly int32 minVal
-    .field private initonly int32 maxVal
+    .field private initonly valuetype Range range
     .field private initonly class [mscorlib]System.Random rng
 
-    .method public specialname rtspecialname instance void .ctor()
+    .method specialname rtspecialname instance void .ctor(valuetype Range range)
     {
-        // Set minVal to 0.
+        // Set range.
         ldarg.0
-        ldc.i4 0
-        stfld int32 RandomGenerator::minVal
-
-        // Set maxVal to 100.
-        ldarg.0
-        ldc.i4 100
-        stfld int32 RandomGenerator::maxVal
+        ldarg range
+        stfld valuetype Range RandomGenerator::range
 
         // Create new Random instance.
         ldarg.0
@@ -25,63 +19,29 @@
         ret
     }
 
-    .method public specialname rtspecialname instance void .ctor(int32 minVal, int32 maxVal)
+    .property instance valuetype Range Range()
     {
-        // Verify that max is not less then min.
-        ldarg maxVal
-        ldarg minVal
-        blt _ThrowMaxValueLessThenMinValue
-
-        // Set minVal.
-        ldarg.0
-        ldarg minVal
-        stfld int32 RandomGenerator::minVal
-
-        // Set maxVal.
-        ldarg.0
-        ldarg maxVal
-        stfld int32 RandomGenerator::maxVal
-
-        // Create new Random instance.
-        ldarg.0
-        newobj instance void [mscorlib]System.Random::.ctor()
-        stfld class [mscorlib]System.Random RandomGenerator::rng
-
-        ret
-
-        _ThrowMaxValueLessThenMinValue:
-        ldstr "maxValue cannot be less then minValue."
-        ldstr "maxValue"
-        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
-        throw
+        .get instance valuetype Range RandomGenerator::GetRange()
     }
 
-    .property instance int32 MinValue()
-    {
-        .get instance int32 RandomGenerator::GetMinValue()
-    }
-
-    .property instance int32 MaxValue()
-    {
-        .get instance int32 RandomGenerator::GetMaxValue()
-    }
-
-    .method public instance int32 GetNumber()
+    .method instance int32 GetNumber()
     {
         ldarg.0
         ldfld class [mscorlib]System.Random RandomGenerator::rng
 
         ldarg.0
-        ldfld int32 RandomGenerator::minVal
+        ldflda valuetype Range RandomGenerator::range
+        call instance int32 Range::GetMinValue()
 
         ldarg.0
-        ldfld int32 RandomGenerator::maxVal
+        ldflda valuetype Range RandomGenerator::range
+        call instance int32 Range::GetMaxValue()
 
         call instance int32 [mscorlib]System.Random::Next(int32, int32)
         ret
     }
 
-    .method public instance int32[] GetNumbers(int32 count)
+    .method instance int32[] GetNumbers(int32 count)
     {
         .locals
         (
@@ -114,7 +74,7 @@
         throw
     }
 
-    .method public instance void GetNumbers(int32[] numbersArray)
+    .method instance void GetNumbers(int32[] numbersArray)
     {
         .locals
         (
@@ -166,17 +126,10 @@
         throw
     }
 
-    .method private instance int32 GetMinValue()
+    .method instance valuetype Range GetRange()
     {
         ldarg.0
-        ldfld int32 RandomGenerator::minVal
-        ret
-    }
-
-    .method private instance int32 GetMaxValue()
-    {
-        ldarg.0
-        ldfld int32 RandomGenerator::maxVal
+        ldfld valuetype Range RandomGenerator::range
         ret
     }
 }

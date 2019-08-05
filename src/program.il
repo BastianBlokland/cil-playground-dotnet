@@ -1,7 +1,7 @@
-.class public sealed Program
+.class sealed Program
     extends [mscorlib]System.Object
 {
-    .method public static int32 Main(class [mscorlib]System.String[] args)
+    .method static int32 Main(class [mscorlib]System.String[] args)
     {
         .entrypoint
         .locals
@@ -85,8 +85,9 @@
             [0] int32 minValue,
             [1] int32 maxValue,
             [2] int32 count,
-            [3] class RandomGenerator generator,
-            [4] int32[] randomNumbers
+            [3] valuetype Range range,
+            [4] class RandomGenerator generator,
+            [5] int32[] randomNumbers
         )
 
         // Parse minValue from arg 1.
@@ -110,10 +111,14 @@
         call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
         brfalse _ExitWithInvalidArgs
 
-        // Create generator.
+        // Create range.
         ldloc minValue
         ldloc maxValue
-        newobj instance void RandomGenerator::.ctor(int32, int32)
+        call valuetype Range Range::Create(int32, int32)
+        stloc range
+
+        ldloc range
+        newobj instance void RandomGenerator::.ctor(valuetype Range)
         stloc generator
 
         // Generate the numbers.
@@ -125,7 +130,7 @@
         // Print the numbers.
         ldloc randomNumbers
         ldarg writer
-        call void PrintAll<int32>(!!0[], class [mscorlib]System.IO.StreamWriter);
+        call void PrintAll<int32>(!!0[], class [mscorlib]System.IO.StreamWriter)
 
         // Exit with code '0'.
         _Exit:
