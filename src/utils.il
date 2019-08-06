@@ -35,7 +35,61 @@
     throw
 }
 
-.method static void ForAll<T>(!!T[] tArray, class [mscorlib]System.Action<!!T> action)
+.method static void PrintAll<T>(!!T[] tArray, class [mscorlib]System.IO.StreamWriter writer)
+{
+    .locals
+    (
+        [0] class [mscorlib]System.String[] stringArray,
+        [1] class [mscorlib]System.Func`2<!!T, string> toString,
+        [2] class [mscorlib]System.Action`1<string> writeLine
+    )
+
+    // Check if array is null.
+    ldarg tArray
+    brnull _ThrowArrayNull
+
+    // Check if writer is null.
+    ldarg writer
+    brnull _ThrowWriterNull
+
+    // Create delegate for 'ToString'.
+    ldnull // Null because it is a static method.
+    ldftn string ToString<!!T>(!!0)
+    newobj instance void class [mscorlib]System.Func`2<!!T, string>::.ctor(object, native int)
+    stloc toString
+
+    // Map to a string array.
+    ldarg tArray
+    ldloc toString
+    call !!1[] Map<!!T, string>(!!0[], class [mscorlib]System.Func`2<!!0, !!1> func)
+    stloc stringArray
+
+    // Create delegate for 'StreamWriter.WriteLine'.
+    ldarg writer
+    dup
+    ldvirtftn instance void [mscorlib]System.IO.TextWriter::WriteLine(string)
+    newobj instance void class [mscorlib]System.Action`1<string>::.ctor(object, native int)
+    stloc writeLine
+
+    // Print all items.
+    ldloc stringArray
+    ldloc writeLine
+    call void ForAll<string>(!!0[], class [mscorlib]System.Action`1<!!0>)
+
+    ret
+
+    _ThrowArrayNull:
+    ldstr "tArray"
+    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    throw
+
+    _ThrowWriterNull:
+    ldstr "writer"
+    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    throw
+}
+
+.method static void ForAll<T>(!!T[] tArray, class [mscorlib]System.Action`1<!!T> action)
 {
     .locals
     (
@@ -71,7 +125,7 @@
     ldarg tArray
     ldloc index
     ldelem !!0
-    callvirt instance void class [mscorlib]System.Action<!!0>::Invoke(!0)
+    callvirt instance void class [mscorlib]System.Action`1<!!0>::Invoke(!0)
 
     // Increment the index.
     ldloc index
@@ -96,21 +150,23 @@
     ret
 }
 
-.method static void PrintAll<T>(!!T[] tArray, class [mscorlib]System.IO.StreamWriter writer)
+.method static !!T2[] Map<T1, T2>(!!T1[] tArray, class [mscorlib]System.Func`2<!!T1, !!T2> func)
 {
     .locals
     (
         [0] int32 index,
-        [1] int32 count
+        [1] int32 count,
+        [2] !!T2[] result,
+        [3] !!T2 temp
     )
 
     // Check if array is null.
     ldarg tArray
     brnull _ThrowArrayNull
 
-    // Check if writer is null.
-    ldarg writer
-    brnull _ThrowWriterNull
+    // Check if func is null.
+    ldarg func
+    brnull _ThrowFuncNull
 
     // Set index to 0.
     ldc.i4 0
@@ -121,18 +177,30 @@
     ldlen
     stloc count
 
+    // Create result array.
+    ldloc count
+    newarr string
+    stloc result
+
     // Return if index is equal to count.
     _CheckIndex:
     ldloc index
     ldloc count
     beq _Return
 
-    // Print the item.
+    // Load elem from source array and transform with the func.
+    ldarg func
     ldarg tArray
     ldloc index
-    ldelem !!0
-    ldarg writer
-    call void PrintValue<!!0>(!!0, class [mscorlib]System.IO.StreamWriter)
+    ldelem !!T1
+    callvirt instance !1 class [mscorlib]System.Func`2<!!T1, !!T2>::Invoke(!0)
+    stloc temp
+
+    // Store in the result array.
+    ldloc result
+    ldloc index
+    ldloc temp
+    stelem !!T2
 
     // Increment the index.
     ldloc index
@@ -148,36 +216,22 @@
     newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
     throw
 
-    _ThrowWriterNull:
-    ldstr "writer"
+    _ThrowFuncNull:
+    ldstr "func"
     newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
     throw
 
     _Return:
+    ldloc result
     ret
 }
 
-.method static void PrintValue<T>(!!T val, class [mscorlib]System.IO.StreamWriter writer)
+.method static string ToString<T>(!!T val)
 {
-    // Check if writer is null.
-    ldarg writer
-    brnull _ThrowWriterNull
-
-    // Load the writer.
-    ldarg writer
-
     // Create a string out of the value.
     ldarg val
-    box int32
+    box !!T
     callvirt instance string [mscorlib]System.Object::ToString()
 
-    // Print the string to the writer.
-    call instance void [mscorlib]System.IO.StreamWriter::WriteLine(string)
-
     ret
-
-    _ThrowWriterNull:
-    ldstr "writer"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
-    throw
 }
