@@ -1,5 +1,6 @@
 .class sealed RandomGenerator
     extends [mscorlib]System.Object
+    implements IRandomGenerator
 {
     .field private initonly valuetype Range range
     .field private initonly class [mscorlib]System.Random rng
@@ -24,8 +25,10 @@
         .get instance valuetype Range RandomGenerator::GetRange()
     }
 
-    .method instance int32 GetNumber()
+    .method virtual instance int32 GetNumber()
     {
+        .override IRandomGenerator::GetNumber
+
         ldarg.0
         ldfld class [mscorlib]System.Random RandomGenerator::rng
 
@@ -41,8 +44,9 @@
         ret
     }
 
-    .method instance int32[] GetNumbers(int32 count)
+    .method hidebysig virtual instance int32[] GetNumbers(int32 count)
     {
+        .override IRandomGenerator::GetNumbers
         .locals
         (
             [0] int32[] result
@@ -74,8 +78,9 @@
         throw
     }
 
-    .method instance void GetNumbers(int32[] numbersArray)
+    .method hidebysig virtual instance void GetNumbers(int32[] numbersArray)
     {
+        .override IRandomGenerator::GetNumbers
         .locals
         (
             [0] int32 index,

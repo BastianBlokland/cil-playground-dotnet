@@ -86,7 +86,7 @@
             [1] int32 maxValue,
             [2] int32 count,
             [3] valuetype Range range,
-            [4] class RandomGenerator generator,
+            [4] class IRandomGenerator generator,
             [5] int32[] randomNumbers
         )
 
@@ -124,7 +124,7 @@
         // Generate the numbers.
         ldloc generator
         ldloc count
-        call instance int32[] RandomGenerator::GetNumbers(int32)
+        callvirt instance int32[] IRandomGenerator::GetNumbers(int32)
         stloc randomNumbers
 
         // Print the numbers.
