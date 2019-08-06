@@ -28,6 +28,24 @@
         .get instance int32 Range::GetMaxValue()
     }
 
+    .method static valuetype Range Create()
+    {
+        .locals
+        (
+            [0] valuetype Range range
+        )
+
+        // Run the constructor on the value.
+        ldloca range
+        ldc.i4 0 // minVal 0.
+        ldc.i4 1000 // maxVal 1000.
+        call instance void Range::.ctor(int32, int32)
+
+        // Return the value.
+        ldloc range
+        ret
+    }
+
     .method static valuetype Range Create(int32 minVal, int32 maxVal)
     {
         .locals
