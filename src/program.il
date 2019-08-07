@@ -1,7 +1,7 @@
 .class sealed Program
     extends [mscorlib]System.Object
 {
-    .method static int32 Main(class [mscorlib]System.String[] args)
+    .method static int32 Main(string[] args)
     {
         .entrypoint
         .locals
@@ -16,7 +16,7 @@
         ldarg args
         ldc.i4 0 // Argument 0.
         ldloca mode
-        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        call bool TryGetIntAtIndex(string[], int32, int32&)
         brfalse _ExitWithInvalidMode
 
         // Switch on the mode.
@@ -41,7 +41,7 @@
             // Generate the numbers.
             ldarg args
             ldloc outputWriter
-            call int32 Program::GenerateNumbers(class [mscorlib]System.String[], class [mscorlib]System.IO.StreamWriter)
+            call int32 Program::GenerateNumbers(string[], class [mscorlib]System.IO.StreamWriter)
             stloc exitCode
 
             // Leave the try block.
@@ -78,7 +78,7 @@
         ret
     }
 
-    .method private static int32 GenerateNumbers(class [mscorlib]System.String[] args, class [mscorlib]System.IO.StreamWriter writer)
+    .method private static int32 GenerateNumbers(string[] args, class [mscorlib]System.IO.StreamWriter writer)
     {
         .locals
         (
@@ -94,21 +94,21 @@
         ldarg args
         ldc.i4 1 // Argument 1.
         ldloca minValue
-        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        call bool TryGetIntAtIndex(string[], int32, int32&)
         brfalse _ExitWithInvalidArgs
 
         // Parse maxValue from arg 2.
         ldarg args
         ldc.i4 2 // Argument 2.
         ldloca maxValue
-        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        call bool TryGetIntAtIndex(string[], int32, int32&)
         brfalse _ExitWithInvalidArgs
 
         // Parse count from arg 3.
         ldarg args
         ldc.i4 3 // Argument 3.
         ldloca count
-        call bool TryGetIntAtIndex(class [mscorlib]System.String[], int32, int32&)
+        call bool TryGetIntAtIndex(string[], int32, int32&)
         brfalse _ExitWithInvalidArgs
 
         // Create range.

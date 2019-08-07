@@ -1,5 +1,5 @@
 .method static bool TryGetIntAtIndex(
-    class [mscorlib]System.String[] stringArray,
+    string[] stringArray,
     int32 index,
     int32& result)
 {
@@ -16,7 +16,7 @@
     // Get string at index.
     ldarg stringArray
     ldarg index
-    ldelem class [mscorlib]System.String
+    ldelem string
 
     // TryParse it and return the result.
     ldarg result
@@ -39,7 +39,7 @@
 {
     .locals
     (
-        [0] class [mscorlib]System.String[] stringArray,
+        [0] string[] stringArray,
         [1] class [mscorlib]System.Func`2<!!T, string> toString,
         [2] class [mscorlib]System.Action`1<string> writeLine
     )
