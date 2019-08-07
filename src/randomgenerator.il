@@ -7,6 +7,10 @@
 
     .method specialname rtspecialname instance void .ctor(valuetype Range range)
     {
+        // Call base constructor.
+        ldarg.0
+        call instance void [mscorlib]System.Object::.ctor()
+
         // Set range.
         ldarg.0
         ldarg range
