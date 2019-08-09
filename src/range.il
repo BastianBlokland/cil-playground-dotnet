@@ -71,7 +71,7 @@
         _ThrowMaxValueLessThenMinValue:
         ldstr "maxValue cannot be less then minValue."
         ldstr "maxValue"
-        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
+        newobj instance void [netstandard]System.ArgumentException::.ctor(string, string)
         throw
     }
 

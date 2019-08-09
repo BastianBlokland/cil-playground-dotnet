@@ -1,5 +1,4 @@
-.assembly extern System.Console { }
-.assembly extern mscorlib { }
+.assembly extern netstandard { }
 
 .module App.exe
 .assembly App

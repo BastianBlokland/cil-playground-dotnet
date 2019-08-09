@@ -1,5 +1,5 @@
 .class sealed Program
-    extends [mscorlib]System.Object
+    extends [netstandard]System.Object
 {
     .method static int32 Main(string[] args)
     {
@@ -7,9 +7,9 @@
         .locals
         (
             [0] int32 mode,
-            [1] class [mscorlib]System.IO.StreamWriter outputWriter,
+            [1] class [netstandard]System.IO.StreamWriter outputWriter,
             [2] int32 exitCode,
-            [3] class [mscorlib]System.Exception exception
+            [3] class [netstandard]System.Exception exception
         )
 
         // Parse mode from arg 0.
@@ -25,13 +25,13 @@
         br _ExitWithInvalidMode
 
         _PrintToConsole:
-        call class [mscorlib]System.IO.StreamWriter Program::GetConsoleOutWriter()
+        call class [netstandard]System.IO.StreamWriter Program::GetConsoleOutWriter()
         stloc outputWriter
         br _Run
 
         _PrintToFile:
         ldstr "output.txt"
-        call class [mscorlib]System.IO.StreamWriter Program::GetFileWriter(string)
+        call class [netstandard]System.IO.StreamWriter Program::GetFileWriter(string)
         stloc outputWriter
         br _Run
 
@@ -41,22 +41,22 @@
             // Generate the numbers.
             ldarg args
             ldloc outputWriter
-            call int32 Program::GenerateNumbers(string[], class [mscorlib]System.IO.StreamWriter)
+            call int32 Program::GenerateNumbers(string[], class [netstandard]System.IO.StreamWriter)
             stloc exitCode
 
             // Leave the try block.
             leave _FinishedRun
         }
-        catch [mscorlib]System.Exception
+        catch [netstandard]System.Exception
         {
             stloc exception
 
             // Print exception to console.
             ldstr "Failed to generate: "
             ldloc exception
-            callvirt instance string [mscorlib]System.Exception::get_Message()
-            call string [mscorlib]System.String::Concat(string, string)
-            call void [System.Console]System.Console::WriteLine(string)
+            callvirt instance string [netstandard]System.Exception::get_Message()
+            call string [netstandard]System.String::Concat(string, string)
+            call void [netstandard]System.Console::WriteLine(string)
 
             // Leave the catch block.
             leave _FinishedRun
@@ -66,19 +66,19 @@
 
         // Dispose the output writer.
         ldloc outputWriter
-        call instance void [mscorlib]System.IO.StreamWriter::Dispose()
+        call instance void [netstandard]System.IO.StreamWriter::Dispose()
 
         ldloc exitCode
         ret
 
         _ExitWithInvalidMode:
         ldstr "Invalid mode, provide mode as arg1. Possible modes:\n0 - Generate to console.\n1 - Generate to file."
-        call void [System.Console]System.Console::WriteLine(string)
+        call void [netstandard]System.Console::WriteLine(string)
         ldc.i4 1
         ret
     }
 
-    .method private static int32 GenerateNumbers(string[] args, class [mscorlib]System.IO.StreamWriter writer)
+    .method private static int32 GenerateNumbers(string[] args, class [netstandard]System.IO.StreamWriter writer)
     {
         .locals
         (
@@ -130,7 +130,7 @@
         // Print the numbers.
         ldloc randomNumbers
         ldarg writer
-        call void PrintAll<int32>(!!0[], class [mscorlib]System.IO.StreamWriter)
+        call void PrintAll<int32>(!!0[], class [netstandard]System.IO.StreamWriter)
 
         // Exit with code '0'.
         _Exit:
@@ -139,50 +139,50 @@
 
         _ExitWithInvalidArgs:
         ldstr "Invalid arguments, expected: arg2: minValue, arg3: maxValue, arg4: count."
-        call void [System.Console]System.Console::WriteLine(string)
+        call void [netstandard]System.Console::WriteLine(string)
         ldc.i4 1
         ret
     }
 
-    .method private static class [mscorlib]System.IO.StreamWriter GetConsoleOutWriter()
+    .method private static class [netstandard]System.IO.StreamWriter GetConsoleOutWriter()
     {
         .locals
         (
-            [0] class [mscorlib]System.IO.StreamWriter writer
+            [0] class [netstandard]System.IO.StreamWriter writer
         )
 
         // Open output stream.
-        call class [mscorlib]System.IO.Stream [System.Console]System.Console::OpenStandardOutput()
+        call class [netstandard]System.IO.Stream [netstandard]System.Console::OpenStandardOutput()
 
         // Create new writer around the stream.
-        newobj instance void [mscorlib]System.IO.StreamWriter::.ctor(class [mscorlib]System.IO.Stream)
+        newobj instance void [netstandard]System.IO.StreamWriter::.ctor(class [netstandard]System.IO.Stream)
         stloc writer
 
         // Set 'AutoFlush' on the writer.
         ldloc writer
         ldc.i4 1
-        call instance void [mscorlib]System.IO.StreamWriter::set_AutoFlush(bool)
+        call instance void [netstandard]System.IO.StreamWriter::set_AutoFlush(bool)
 
         ldloc writer
         ret
     }
 
-    .method private static class [mscorlib]System.IO.StreamWriter GetFileWriter(string fileName)
+    .method private static class [netstandard]System.IO.StreamWriter GetFileWriter(string fileName)
     {
         .locals
         (
-            [0] class [mscorlib]System.IO.StreamWriter writer
+            [0] class [netstandard]System.IO.StreamWriter writer
         )
 
         // Create new writer.
         ldarg fileName
-        newobj instance void [mscorlib]System.IO.StreamWriter::.ctor(string)
+        newobj instance void [netstandard]System.IO.StreamWriter::.ctor(string)
         stloc writer
 
         // Set 'AutoFlush' on the writer.
         ldloc writer
         ldc.i4 1
-        call instance void [mscorlib]System.IO.StreamWriter::set_AutoFlush(bool)
+        call instance void [netstandard]System.IO.StreamWriter::set_AutoFlush(bool)
 
         ldloc writer
         ret

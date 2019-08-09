@@ -20,7 +20,7 @@
 
     // TryParse it and return the result.
     ldarg result
-    call bool [mscorlib]System.Int32::TryParse(string, int32&)
+    call bool [netstandard]System.Int32::TryParse(string, int32&)
     ret
 
     _ReturnFalse:
@@ -31,17 +31,17 @@
 
     _ThrowArrayNull:
     ldstr "stringArray"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 }
 
-.method static void PrintAll<T>(!!T[] tArray, class [mscorlib]System.IO.StreamWriter writer)
+.method static void PrintAll<T>(!!T[] tArray, class [netstandard]System.IO.StreamWriter writer)
 {
     .locals
     (
         [0] string[] stringArray,
-        [1] class [mscorlib]System.Func`2<!!T, string> toString,
-        [2] class [mscorlib]System.Action`1<string> writeLine
+        [1] class [netstandard]System.Func`2<!!T, string> toString,
+        [2] class [netstandard]System.Action`1<string> writeLine
     )
 
     // Check if array is null.
@@ -55,41 +55,41 @@
     // Create delegate for 'ToString'.
     ldnull // Null because it is a static method.
     ldftn string ToString<!!T>(!!0)
-    newobj instance void class [mscorlib]System.Func`2<!!T, string>::.ctor(object, native int)
+    newobj instance void class [netstandard]System.Func`2<!!T, string>::.ctor(object, native int)
     stloc toString
 
     // Map to a string array.
     ldarg tArray
     ldloc toString
-    call !!1[] Map<!!T, string>(!!0[], class [mscorlib]System.Func`2<!!0, !!1> func)
+    call !!1[] Map<!!T, string>(!!0[], class [netstandard]System.Func`2<!!0, !!1> func)
     stloc stringArray
 
     // Create delegate for 'StreamWriter.WriteLine'.
     ldarg writer
     dup
-    ldvirtftn instance void [mscorlib]System.IO.TextWriter::WriteLine(string)
-    newobj instance void class [mscorlib]System.Action`1<string>::.ctor(object, native int)
+    ldvirtftn instance void [netstandard]System.IO.TextWriter::WriteLine(string)
+    newobj instance void class [netstandard]System.Action`1<string>::.ctor(object, native int)
     stloc writeLine
 
     // Print all items.
     ldloc stringArray
     ldloc writeLine
-    call void ForAll<string>(!!0[], class [mscorlib]System.Action`1<!!0>)
+    call void ForAll<string>(!!0[], class [netstandard]System.Action`1<!!0>)
 
     ret
 
     _ThrowArrayNull:
     ldstr "tArray"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 
     _ThrowWriterNull:
     ldstr "writer"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 }
 
-.method static void ForAll<T>(!!T[] tArray, class [mscorlib]System.Action`1<!!T> action)
+.method static void ForAll<T>(!!T[] tArray, class [netstandard]System.Action`1<!!T> action)
 {
     .locals
     (
@@ -125,7 +125,7 @@
     ldarg tArray
     ldloc index
     ldelem !!0
-    callvirt instance void class [mscorlib]System.Action`1<!!0>::Invoke(!0)
+    callvirt instance void class [netstandard]System.Action`1<!!0>::Invoke(!0)
 
     // Increment the index.
     ldloc index
@@ -138,19 +138,19 @@
 
     _ThrowArrayNull:
     ldstr "tArray"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 
     _ThrowActionNull:
     ldstr "action"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 
     _Return:
     ret
 }
 
-.method static !!T2[] Map<T1, T2>(!!T1[] tArray, class [mscorlib]System.Func`2<!!T1, !!T2> func)
+.method static !!T2[] Map<T1, T2>(!!T1[] tArray, class [netstandard]System.Func`2<!!T1, !!T2> func)
 {
     .locals
     (
@@ -193,7 +193,7 @@
     ldarg tArray
     ldloc index
     ldelem !!T1
-    callvirt instance !1 class [mscorlib]System.Func`2<!!T1, !!T2>::Invoke(!0)
+    callvirt instance !1 class [netstandard]System.Func`2<!!T1, !!T2>::Invoke(!0)
     stloc temp
 
     // Store in the result array.
@@ -213,12 +213,12 @@
 
     _ThrowArrayNull:
     ldstr "tArray"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 
     _ThrowFuncNull:
     ldstr "func"
-    newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+    newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
     throw
 
     _Return:
@@ -231,7 +231,7 @@
     // Create a string out of the value.
     ldarg val
     box !!T
-    callvirt instance string [mscorlib]System.Object::ToString()
+    callvirt instance string [netstandard]System.Object::ToString()
 
     ret
 }

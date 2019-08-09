@@ -1,15 +1,15 @@
 .class sealed RandomGenerator
-    extends [mscorlib]System.Object
+    extends [netstandard]System.Object
     implements IRandomGenerator
 {
     .field private initonly valuetype Range range
-    .field private initonly class [mscorlib]System.Random rng
+    .field private initonly class [netstandard]System.Random rng
 
     .method specialname rtspecialname instance void .ctor(valuetype Range range)
     {
         // Call base constructor.
         ldarg.0
-        call instance void [mscorlib]System.Object::.ctor()
+        call instance void [netstandard]System.Object::.ctor()
 
         // Set range.
         ldarg.0
@@ -18,8 +18,8 @@
 
         // Create new Random instance.
         ldarg.0
-        newobj instance void [mscorlib]System.Random::.ctor()
-        stfld class [mscorlib]System.Random RandomGenerator::rng
+        newobj instance void [netstandard]System.Random::.ctor()
+        stfld class [netstandard]System.Random RandomGenerator::rng
 
         ret
     }
@@ -34,7 +34,7 @@
         .override IRandomGenerator::GetNumber
 
         ldarg.0
-        ldfld class [mscorlib]System.Random RandomGenerator::rng
+        ldfld class [netstandard]System.Random RandomGenerator::rng
 
         ldarg.0
         ldflda valuetype Range RandomGenerator::range
@@ -44,7 +44,7 @@
         ldflda valuetype Range RandomGenerator::range
         call instance int32 Range::GetMaxValue()
 
-        call instance int32 [mscorlib]System.Random::Next(int32, int32)
+        call instance int32 [netstandard]System.Random::Next(int32, int32)
         ret
     }
 
@@ -78,7 +78,7 @@
         _ThrowCountLessThen0:
         ldstr "Count less then 0 is not supported."
         ldstr "count"
-        newobj instance void [mscorlib]System.ArgumentException::.ctor(string, string)
+        newobj instance void [netstandard]System.ArgumentException::.ctor(string, string)
         throw
     }
 
@@ -131,7 +131,7 @@
 
         _ThrowArrayNull:
         ldstr "array"
-        newobj instance void [mscorlib]System.ArgumentNullException::.ctor(string)
+        newobj instance void [netstandard]System.ArgumentNullException::.ctor(string)
         throw
     }
 
